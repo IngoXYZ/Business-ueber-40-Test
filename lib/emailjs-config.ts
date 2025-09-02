@@ -41,3 +41,16 @@ export const EMAILJS_CONFIG = {
 // - {{max_score}}
 // - {{result_type}}
 // - {{message}}
+//
+// SUPER-EINFACHES TEMPLATE (Falls das obige nicht funktioniert):
+//
+// Betreff: Business Test Teilnehmer
+//
+// Inhalt:
+// Name: {{user_name}}
+// Email: {{user_email}}
+// Score: {{total_score}}/{{max_score}}  
+// Typ: {{result_type}}
+// Datum: {{submission_date}}
+//
+// {{message}}
