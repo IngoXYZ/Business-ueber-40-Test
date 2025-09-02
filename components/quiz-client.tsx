@@ -86,31 +86,58 @@ export default function QuizClient() {
   };
 
   const handleSubmit = async () => {
-    if (!userSession) return;
+    console.log('🎯 Quiz submission started!');
+    
+    if (!userSession) {
+      console.error('❌ No user session found!');
+      return;
+    }
+
+    console.log('👤 User session:', { name: userSession.name, email: userSession.email });
 
     setIsSubmitting(true);
     
     try {
+      console.log('📊 Calculating results...');
       const results = calculateResults();
+      console.log('✅ Results calculated:', results);
       
       // Save to localStorage
+      console.log('💾 Saving to localStorage...');
       saveQuizSession({
         userId: userSession.userId,
         answers,
         ...results
       });
+      console.log('✅ Saved to localStorage');
 
       // Send email with results
-      const emailSuccess = await sendQuizResults({
+      console.log('📧 Attempting to send email...');
+      console.log('📧 Email data being sent:', {
         name: userSession.name,
         email: userSession.email,
         totalScore: results.totalScore,
         maxScore: results.maxScore,
-        resultType: results.resultType,
-        categoryScores: results.categoryScores,
-        recommendations: results.recommendations,
-        timestamp: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE')
+        resultType: results.resultType
       });
+      
+      let emailSuccess = false;
+      try {
+        emailSuccess = await sendQuizResults({
+          name: userSession.name,
+          email: userSession.email,
+          totalScore: results.totalScore,
+          maxScore: results.maxScore,
+          resultType: results.resultType,
+          categoryScores: results.categoryScores,
+          recommendations: results.recommendations,
+          timestamp: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE')
+        });
+        console.log('📧 Email send result:', emailSuccess);
+      } catch (emailError) {
+        console.error('❌ Error during email sending:', emailError);
+        emailSuccess = false;
+      }
 
       if (emailSuccess) {
         toast.success('Ergebnisse erfolgreich versendet!');
@@ -118,11 +145,13 @@ export default function QuizClient() {
         toast.error('E-Mail-Versand fehlgeschlagen, aber Ergebnisse gespeichert');
       }
 
+      console.log('🔄 Redirecting to results page...');
       router.push('/results');
     } catch (error) {
-      console.error('Error submitting quiz:', error);
+      console.error('❌ Error submitting quiz:', error);
       toast.error('Fehler beim Speichern der Antworten');
     } finally {
+      console.log('🏁 Quiz submission completed');
       setIsSubmitting(false);
     }
   };
