@@ -49,7 +49,7 @@ export async function sendQuizResults(submission: QuizSubmission): Promise<boole
       return false;
     }
     
-    // Template Parameters - EXACTLY matching the template requirements
+    // Template Parameters - ALLE Business Test 40+ Parameter
     const templateParams = {
       user_name: submission.name,
       user_email: submission.email,
@@ -57,6 +57,18 @@ export async function sendQuizResults(submission: QuizSubmission): Promise<boole
       max_score: submission.maxScore.toString(),
       result_type: submission.resultType,
       submission_date: submission.timestamp,
+      // Kategorie-Scores für Business Test 40+
+      unternehmer_mindset_score: (submission.categoryScores.unternehmer_mindset || 0).toFixed(1),
+      risikobereitschaft_score: (submission.categoryScores.risikobereitschaft || 0).toFixed(1),
+      technische_affinitaet_score: (submission.categoryScores.technische_affinitaet || 0).toFixed(1),
+      ai_bereitschaft_score: (submission.categoryScores.ai_bereitschaft || 0).toFixed(1),
+      finanzielle_situation_score: (submission.categoryScores.finanzielle_situation || 0).toFixed(1),
+      work_life_balance_score: (submission.categoryScores.work_life_balance || 0).toFixed(1),
+      lernbereitschaft_score: (submission.categoryScores.lernbereitschaft || 0).toFixed(1),
+      netzwerk_marketing_score: (submission.categoryScores.netzwerk_marketing || 0).toFixed(1),
+      // Empfehlungen
+      recommendations: submission.recommendations.join('\n• '),
+      // Fallback Message
       message: `Business Test 40+ - Teilnehmer: ${submission.name}, E-Mail: ${submission.email}, Score: ${submission.totalScore}/${submission.maxScore}, Ergebnis: ${submission.resultType}`
     };
     
